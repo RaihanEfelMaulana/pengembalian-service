@@ -6,9 +6,8 @@ package com.raihanefelmaulana.pengembalianservice.Service;
 
 import com.raihanefelmaulana.pengembalianservice.Entity.Pengembalian;
 import com.raihanefelmaulana.pengembalianservice.Repository.PengembalianRepository;
-import com.raihanefelmaulana.pengembalianservice.Vo.Peminjaman;
+import com.raihanefelmaulana.pengembalianservice.Vo.ResponseTemplateVO;
 import com.raihanefelmaulana.pengembalianservice.Vo.ResponseTemplateVOPinjam;
-import com.raihanefelmaulana.pengembalianservice.Vo.ResponseTemplateVo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PengembalianService {
     @Autowired
-    private SimpleDateFormat simpleDateFormat;
+    private SimpleDateFormat formatTanggal;
     
     @Autowired
     private PengembalianRepository pengembalianRepository;
@@ -33,20 +32,20 @@ public class PengembalianService {
     private RestTemplate restTemplate;
     
     public Pengembalian savePengembalian(Pengembalian pengembalian) throws ParseException{
+         
         ResponseTemplateVOPinjam peminjaman = restTemplate.getForObject("http://localhost:8119/peminjaman/"
                 +pengembalian.getPeminjamanId(), ResponseTemplateVOPinjam.class);
-        String tglSekarang = simpleDateFormat.format(new Date());
-        long terlambat = kurangTanggal(tglSekarang, peminjaman.getPeminjaman().getTglKembali());
+        String tglSekarang = formatTanggal.format(new Date());
+        long terlambat = kurangTanggal(tglSekarang,peminjaman.getPeminjaman().getTglKembali());
         double denda = terlambat * 500;
         pengembalian.setTerlambat((int)terlambat);
         pengembalian.setTglDiKembalikan(tglSekarang);
         pengembalian.setDenda(denda);
-        
         return pengembalianRepository.save(pengembalian);
     }
     
-    public ResponseTemplateVo getPengembalian(Long pengembalianId){
-        ResponseTemplateVo vo = new ResponseTemplateVo();
+    public ResponseTemplateVO getPengembalian(Long pengembalianId){
+        ResponseTemplateVO vo = new ResponseTemplateVO();
         Pengembalian pengembalian = pengembalianRepository.findByPengembalianId(pengembalianId);
         ResponseTemplateVOPinjam peminjaman = restTemplate.getForObject("http://localhost:8119/peminjaman/"
                 +pengembalian.getPeminjamanId(), ResponseTemplateVOPinjam.class);
@@ -56,23 +55,20 @@ public class PengembalianService {
     }
 
     private long kurangTanggal(String tglAwal, String tglAkhir) throws ParseException {
-        Date tgl1 = simpleDateFormat.parse(tglAwal);
-        Date tgl2 = simpleDateFormat.parse(tglAkhir);
-        long selisih = tgl1.getTime() - tgl2.getTime();
-        long selisihHari = selisih / (24 * 60 * 60 * 1000);
-        return selisihHari;
+//         SimpleDateFormat formatTanggal = new SimpleDateFormat("dd/MM/yyyy");
+       Date tgl1 = formatTanggal.parse(tglAwal);
+       Date tgl2 = formatTanggal.parse(tglAkhir);
+       long selisih = tgl1.getTime() - tgl2.getTime();
+       long selisihhari = selisih / (24 * 60 * 60 * 1000);
+       return selisihhari;
     }
     
-    public Pengembalian findPengembalianById(Long pengembalianId){
-        return pengembalianRepository.findByPengembalianId(pengembalianId);
-    } 
-     
     public List<Pengembalian> getAllPengembalian(){
         return pengembalianRepository.findAll();
     }
     
-    public void deletePengembalian(Long pengembalianId) {
-        pengembalianRepository.deleteById(pengembalianId);
+    public void deletePengembalian(Long pengembalianId){
+       pengembalianRepository.deleteById(pengembalianId);
     }
     
     public Pengembalian updatePengembalian(Pengembalian pengembalian){

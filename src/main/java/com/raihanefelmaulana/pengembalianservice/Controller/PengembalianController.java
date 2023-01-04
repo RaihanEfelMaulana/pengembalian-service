@@ -6,7 +6,7 @@ package com.raihanefelmaulana.pengembalianservice.Controller;
 
 import com.raihanefelmaulana.pengembalianservice.Entity.Pengembalian;
 import com.raihanefelmaulana.pengembalianservice.Service.PengembalianService;
-import com.raihanefelmaulana.pengembalianservice.Vo.ResponseTemplateVo;
+import com.raihanefelmaulana.pengembalianservice.Vo.ResponseTemplateVO;
 import java.text.ParseException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +30,25 @@ public class PengembalianController {
     private PengembalianService pengembalianService;
     
     @PostMapping("/")
-    public Pengembalian savePengembalian(@RequestBody Pengembalian pengembalian) throws ParseException{
+    public Pengembalian savePengembalian(@RequestBody Pengembalian pengembalian) throws ParseException {
         return pengembalianService.savePengembalian(pengembalian);
     }
     
     @GetMapping("/{id}")
-    public Pengembalian findPegembalianById(@PathVariable("id") Long pegembalianId){
-        return pengembalianService.findPengembalianById(pegembalianId);
+    public ResponseTemplateVO getPengembalian(@PathVariable("id") Long pengembalianId){
+     return pengembalianService.getPengembalian(pengembalianId);
     }
     
-    @GetMapping("/")
+     @GetMapping("/")
     public List<Pengembalian> getAllPengembalian(){
         return pengembalianService.getAllPengembalian();
     }
-    
-    @PutMapping("/")
-    public Pengembalian updatePengembalian(@RequestBody Pengembalian pengembalian){
-        return pengembalianService.updatePengembalian(pengembalian);
-    } 
-     
     @DeleteMapping("/{id}")
     public void deletePengembalian(@PathVariable("id") Long pengembalianId){
         pengembalianService.deletePengembalian(pengembalianId);
+    }
+    @PutMapping("/")
+    public Pengembalian updatePPengembalian(@RequestBody Pengembalian pengembalian){
+        return pengembalianService.updatePengembalian(pengembalian);
     }
 }

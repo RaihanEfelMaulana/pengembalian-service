@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseTemplateVOPinjam {
-    private Buku buku;
-    private Anggota anggota;
     private Peminjaman peminjaman;
+    private Anggota anggota;
+    private Buku buku;
 }

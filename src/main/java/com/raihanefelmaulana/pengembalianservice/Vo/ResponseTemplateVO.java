@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseTemplateVo {
+public class ResponseTemplateVO {
     private Pengembalian pengembalian;
-    private Peminjaman peminjaman;
+    private Peminjaman peminjaman; 
 }
