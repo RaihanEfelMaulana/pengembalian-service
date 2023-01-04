@@ -12,6 +12,7 @@ import com.raihanefelmaulana.pengembalianservice.Vo.ResponseTemplateVo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -60,5 +61,21 @@ public class PengembalianService {
         long selisih = tgl1.getTime() - tgl2.getTime();
         long selisihHari = selisih / (24 * 60 * 60 * 1000);
         return selisihHari;
+    }
+    
+    public Pengembalian findPengembalianById(Long pengembalianId){
+        return pengembalianRepository.findByPengembalianId(pengembalianId);
+    } 
+     
+    public List<Pengembalian> getAllPengembalian(){
+        return pengembalianRepository.findAll();
+    }
+    
+    public void deletePengembalian(Long pengembalianId) {
+        pengembalianRepository.deleteById(pengembalianId);
+    }
+    
+    public Pengembalian updatePengembalian(Pengembalian pengembalian){
+        return pengembalianRepository.save(pengembalian);
     }
 }
